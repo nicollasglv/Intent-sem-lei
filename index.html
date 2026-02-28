@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Intent Sem Lei</title>
+
+<style>
+body{
+font-family: Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+#login{
+margin-top:100px;
+}
+
+#site{
+display:none;
+}
+
+.post{
+background:#222;
+padding:10px;
+margin:10px;
+border-radius:10px;
+}
+
+img{
+max-width:200px;
+display:block;
+margin:auto;
+}
+
+input, textarea{
+width:80%;
+margin:5px;
+padding:5px;
+}
+
+button{
+padding:6px 12px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="login">
+
+<h1>Intent Sem Lei</h1>
+<p>Digite a senha</p>
+
+<input id="senha" type="password">
+<br>
+<button onclick="entrar()">Entrar</button>
+
+</div>
+
+
+<div id="site">
+
+<h2>Mural do grupo</h2>
+
+<input id="apelido" placeholder="apelido">
+
+<br>
+
+<textarea id="mensagem" placeholder="escreve algo"></textarea>
+
+<br>
+
+<input type="file" id="foto">
+
+<br>
+
+<button onclick="postar()">Postar</button>
+
+<div id="posts"></div>
+
+</div>
+
+
+<script>
+
+const senhaCorreta = "1234"
+
+function entrar(){
+
+let senha = document.getElementById("senha").value
+
+if(senha === senhaCorreta){
+
+document.getElementById("login").style.display="none"
+document.getElementById("site").style.display="block"
+
+}else{
+
+alert("senha errada")
+
+}
+
+}
+
+
+function postar(){
+
+let apelido = document.getElementById("apelido").value
+let mensagem = document.getElementById("mensagem").value
+let foto = document.getElementById("foto").files[0]
+
+let post = document.createElement("div")
+post.className="post"
+
+let html = "<b>"+apelido+"</b><br>"+mensagem+"<br>"
+
+if(foto){
+
+let reader = new FileReader()
+
+reader.onload = function(e){
+
+post.innerHTML = html + "<img src='"+e.target.result+"'>"
+
+}
+
+reader.readAsDataURL(foto)
+
+}else{
+
+post.innerHTML = html
+
+}
+
+document.getElementById("posts").prepend(post)
+
+}
+
+</script>
+
+</body>
+</html>
