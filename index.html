@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Chat dos Amigos</title>
+<title>Intent Sem Lei</title>
 
 <style>
 body{
@@ -10,6 +10,14 @@ body{
   background:#111;
   color:white;
   text-align:center;
+}
+
+#login{
+  margin-top:100px;
+}
+
+#site{
+  display:none;
 }
 
 #chat{
@@ -25,43 +33,77 @@ input{
   padding:5px;
   margin:5px;
 }
+button{
+  padding:6px 12px;
+  cursor:pointer;
+  background:#ff2e2e;
+  border:none;
+  border-radius:6px;
+  color:white;
+}
 </style>
 
 <script>
+const senhaCorreta = "00000";
+
+function entrar(){
+  let senha = document.getElementById("senha").value;
+  if(senha === senhaCorreta){
+    document.getElementById("login").style.display="none";
+    document.getElementById("site").style.display="block";
+  }else{
+    alert("Senha incorreta");
+  }
+}
+
 function enviar(){
-  let nome = document.getElementById("nome").value
-  let msg = document.getElementById("msg").value
+  let nome = document.getElementById("nome").value;
+  let msg = document.getElementById("msg").value;
+
+  if(nome=="" || msg==""){
+    alert("Coloque seu apelido e a mensagem");
+    return;
+  }
 
   fetch("enviar.php",{
     method:"POST",
     headers:{"Content-Type":"application/x-www-form-urlencoded"},
-    body:"nome="+nome+"&msg="+msg
-  })
+    body:"nome="+encodeURIComponent(nome)+"&msg="+encodeURIComponent(msg)
+  });
 
-  document.getElementById("msg").value=""
+  document.getElementById("msg").value="";
 }
 
 function atualizar(){
   fetch("chat.txt")
   .then(r=>r.text())
   .then(t=>{
-    document.getElementById("chat").innerHTML = t
-  })
+    document.getElementById("chat").innerHTML = t;
+  });
 }
 
-setInterval(atualizar,1000)
+setInterval(atualizar,1000);
 </script>
 
 </head>
 <body>
 
-<h1>Chat dos Amigos</h1>
+<div id="login">
+  <h1>Intent Sem Lei</h1>
+  <p>Opa, pra entrar nesse site você precisa digitar a senha</p>
+  <input id="senha" type="password" placeholder="Digite a senha"><br>
+  <button onclick="entrar()">Entrar</button>
+</div>
 
-<div id="chat"></div>
+<div id="site">
+  <h1>Intent Sem Lei</h1>
 
-<input id="nome" placeholder="apelido">
-<input id="msg" placeholder="mensagem">
-<button onclick="enviar()">Enviar</button>
+  <div id="chat"></div>
+
+  <input id="nome" placeholder="apelido">
+  <input id="msg" placeholder="mensagem">
+  <button onclick="enviar()">Enviar</button>
+</div>
 
 </body>
 </html>
