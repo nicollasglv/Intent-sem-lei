@@ -6,93 +6,103 @@
 
 <style>
 body{
-  font-family: Arial;
-  background:#111;
-  color:white;
-  text-align:center;
+font-family: Arial;
+background:#111;
+color:white;
+text-align:center;
 }
-#login{ margin-top:100px; }
-#site{ display:none; }
-#chat{
-  width:80%;
-  height:300px;
-  margin:auto;
-  overflow:auto;
-  border:1px solid #444;
-  padding:10px;
+
+#login{
+margin-top:100px;
 }
-input, button{
-  padding:5px;
-  margin:5px;
+
+#site{
+display:none;
 }
+
+.post{
+background:#222;
+padding:10px;
+margin:10px;
+border-radius:10px;
+}
+
+img{
+max-width:200px;
+display:block;
+margin:auto;
+}
+
+input, textarea{
+width:80%;
+margin:5px;
+padding:5px;
+}
+
 button{
-  background:#ff2e2e;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
+padding:6px 12px;
 }
 </style>
-
-<script>
-const senhaCorreta = "00000";
-
-function entrar(){
-  let senha = document.getElementById("senha").value;
-  if(senha === senhaCorreta){
-    document.getElementById("login").style.display="none";
-    document.getElementById("site").style.display="block";
-    atualizar(); // já carrega o chat
-  }else{
-    alert("Senha incorreta");
-  }
-}
-
-function enviar(){
-  let nome = document.getElementById("nome").value.trim();
-  let msg = document.getElementById("msg").value.trim();
-
-  if(nome=="" || msg==""){ alert("Coloque apelido e mensagem"); return; }
-
-  fetch("enviar.php",{
-    method:"POST",
-    headers:{"Content-Type":"application/x-www-form-urlencoded"},
-    body:"nome="+encodeURIComponent(nome)+"&msg="+encodeURIComponent(msg)
-  }).then(()=>{ // só atualiza depois que PHP terminar
-    document.getElementById("msg").value="";
-    atualizar();
-  });
-}
-
-function atualizar(){
-  fetch("chat.txt?"+new Date().getTime()) // evita cache
-  .then(r=>r.text())
-  .then(t=>{
-    document.getElementById("chat").innerHTML = t;
-    document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
-  });
-}
-
-setInterval(()=>{ if(document.getElementById("site").style.display=="block") atualizar(); },1000);
-
-</script>
 </head>
+
 <body>
 
 <div id="login">
-  <h1>Intent Sem Lei</h1>
-  <p>Opa, pra entrar nesse site você precisa digitar a senha</p>
-  <input id="senha" type="password" placeholder="Digite a senha"><br>
-  <button onclick="entrar()">Entrar</button>
+<h1>Intent Sem Lei</h1>
+<p>Opa, pra entrar nesse site você precisa digitar a senha</p>
+<input id="senha" type="password">
+<br>
+<button onclick="entrar()">Entrar</button>
 </div>
 
 <div id="site">
-  <h1>Intent Sem Lei</h1>
-  <div id="chat"></div>
-  <input id="nome" placeholder="apelido">
-  <input id="msg" placeholder="mensagem">
-  <button onclick="enviar()">Enviar</button>
+<h2>Intent Sem Lei</h2>
+<input id="apelido" placeholder="apelido"><br>
+<textarea id="mensagem" placeholder="escreve algo"></textarea><br>
+<input type="file" id="foto"><br>
+<button onclick="postar()">Postar</button>
+<div id="posts"></div>
 </div>
 
-</body>
-</html>
+<script>
+// -------------------- LOGIN --------------------
+const senhaCorreta = "00000";
+
+function entrar(){
+let senha = document.getElementById("senha").value;
+if(senha === senhaCorreta){
+document.getElementById("login").style.display="none";
+document.getElementById("site").style.display="block";
+}else{
+alert("Senha incorreta");
+}
+}
+
+// -------------------- POSTAR MENSAGEM --------------------
+function postar(){
+let apelido = document.getElementById("apelido").value.trim();
+let mensagem = document.getElementById("mensagem").value.trim();
+let foto = document.getElementById("foto").files[0];
+
+if(apelido=="" || mensagem==""){
+alert("Coloque apelido e mensagem");
+return;
+}
+
+// criar post local
+let post = document.createElement("div");
+post.className="post";
+
+let html = "<b>"+apelido+"</b><br>"+mensagem+"<br>";
+
+// se tiver foto, mostra foto
+if(foto){
+let reader = new FileReader();
+reader.onload = function(e){
+post.innerHTML = html + "<img src='"+e.target.result+"'>";
+document.getElementById("posts").prepend(post);
+};
+reader.readAsDataURL(foto);
+}else{
+post.innerHTML = html;
+document.getElement
