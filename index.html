@@ -1,108 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Intent Sem Lei</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTÍCIAS EMF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
 
-<style>
-body{
-font-family: Arial;
-background:#111;
-color:white;
-text-align:center;
-}
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
 
-#login{
-margin-top:100px;
-}
+        header h1 {
+            margin: 0;
+            font-size: 3em;
+        }
 
-#site{
-display:none;
-}
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
 
-.post{
-background:#222;
-padding:10px;
-margin:10px;
-border-radius:10px;
-}
+        /* Seletor de datas */
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
 
-img{
-max-width:200px;
-display:block;
-margin:auto;
-}
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+        }
 
-input, textarea{
-width:80%;
-margin:5px;
-padding:5px;
-}
+        /* Área das notícias */
+        .news-display {
+            background-color: white;
+            padding: 20px;
+            margin-top: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
 
-button{
-padding:6px 12px;
-}
-</style>
+        /* Botão de locais */
+        .button {
+            display: inline-block;
+            background-color: #333;
+            color: white;
+            padding: 12px 20px;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #555;
+        }
+
+        /* Seção de informações adicionais */
+        .info {
+            margin-top: 40px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            text-align: center;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            margin-top: 40px;
+        }
+    </style>
 </head>
-
 <body>
 
-<div id="login">
-<h1>Intent Sem Lei</h1>
-<p>Opa, pra entrar nesse site você precisa digitar a senha</p>
-<input id="senha" type="password">
-<br>
-<button onclick="entrar()">Entrar</button>
-</div>
+<header>
+    <h1>NOTÍCIAS EMF</h1>
+    <p>Este site é atualizado em 2026. Apenas para postagem do administrador.</p>
+</header>
 
-<div id="site">
-<h2>Intent Sem Lei</h2>
-<input id="apelido" placeholder="apelido"><br>
-<textarea id="mensagem" placeholder="escreve algo"></textarea><br>
-<input type="file" id="foto"><br>
-<button onclick="postar()">Postar</button>
-<div id="posts"></div>
-</div>
+<main>
+    <label for="dates">Selecione a data:</label>
+    <select id="dates">
+        <option value="">-- Escolha uma data --</option>
+        <option value="1">07/02/1926</option>
+        <option value="2">Outubro/1930</option>
+        <option value="3">01/01/1934</option>
+        <option value="4">1979</option>
+        <option value="5">1994</option>
+        <option value="6">20/04/2000</option>
+        <option value="7">20/01/2001</option>
+        <option value="8">19/04/2013</option>
+        <option value="9">24/10/2013</option>
+        <option value="10">Setembro/2023</option>
+        <option value="11">19/06/2024</option>
+        <option value="12">02/01/2026</option>
+    </select>
+
+    <div class="news-display" id="newsContent">
+        Selecione uma data para ver a notícia.
+    </div>
+
+    <a href="https://wa.me/5511979872476?text=Olá,%20quero%20adicionar%20meu%20comércio%20ou%20local" class="button" target="_blank">Adicionar Local/Comércio</a>
+
+    <div class="info">
+        <h3>Informações Importantes</h3>
+        <p>O site é atualizado mensalmente, caso haja novas notícias sobre a estação Engenheiro Manoel Feio.</p>
+    </div>
+</main>
+
+<footer>
+    © 2026 Notícias EMF
+</footer>
 
 <script>
-// -------------------- LOGIN --------------------
-const senhaCorreta = "00000";
+    const news = {
+        1: "07/02/1926 – Inauguração: A estação é aberta pela Estrada de Ferro Central do Brasil (EFCB) como parte da Variante de Poá. Estações Ferroviárias do Brasil.",
+        2: "Outubro/1930 – Fechamento Político: Devido aos conflitos armados da Revolução de 1930, a estação sofre danos e o tráfego é interrompido.",
+        3: "01/01/1934 – Reabertura: Após reparos na infraestrutura pós-revolução, a estação volta a operar regularmente.",
+        4: "1979 – Novo Prédio: Inauguração da atual edificação da estação (reformada posteriormente), substituindo as instalações originais de madeira/alvenaria simples.",
+        5: "1994 – Troca de Gestão: A estação passa a ser administrada pela recém-criada CPTM.",
+        6: "20/04/2000 – Acidente Ferroviário: Um descarrilamento seguido de colisão lateral entre dois trens próximo à estação deixa 16 pessoas feridas.",
+        7: "20/01/2001 – Incidente com Passageira: Queda fatal de uma usuária no vão entre o trem e a plataforma, gerando processos contra a CPTM.",
+        8: "19/04/2013 – Agressão na Plataforma: Um passageiro é agredido e empurrado para fora do vagão em movimento durante uma briga iniciada dentro do trem. Portal G1.",
+        9: "24/10/2013 – Descarrilamento: Trem da Linha 12-Safira sai dos trilhos entre as estações Eng. Manoel Feio e Itaquaquecetuba, interrompendo a circulação por horas.",
+        10: "Setembro/2023 – Caso de Sequestro: Uma influenciadora digital é libertada por sequestradores nas imediações da estação após horas em cárcere privado. Diário de Justiça.",
+        11: "19/06/2024 – Modernização: Entrega das obras de acessibilidade e reforma geral, incluindo novos elevadores e passarelas. Governo de SP.",
+        12: "02/01/2026 – Atentado contra Segurança: Um vigilante da estação é esfaqueado durante o serviço; os autores foram capturados pela GCM dias depois."
+    };
 
-function entrar(){
-let senha = document.getElementById("senha").value;
-if(senha === senhaCorreta){
-document.getElementById("login").style.display="none";
-document.getElementById("site").style.display="block";
-}else{
-alert("Senha incorreta");
-}
-}
+    const select = document.getElementById('dates');
+    const newsDiv = document.getElementById('newsContent');
 
-// -------------------- POSTAR MENSAGEM --------------------
-function postar(){
-let apelido = document.getElementById("apelido").value.trim();
-let mensagem = document.getElementById("mensagem").value.trim();
-let foto = document.getElementById("foto").files[0];
+    select.addEventListener('change', () => {
+        const value = select.value;
+        newsDiv.textContent = news[value] || "Selecione uma data para ver a notícia.";
+    });
+</script>
 
-if(apelido=="" || mensagem==""){
-alert("Coloque apelido e mensagem");
-return;
-}
-
-// criar post local
-let post = document.createElement("div");
-post.className="post";
-
-let html = "<b>"+apelido+"</b><br>"+mensagem+"<br>";
-
-// se tiver foto, mostra foto
-if(foto){
-let reader = new FileReader();
-reader.onload = function(e){
-post.innerHTML = html + "<img src='"+e.target.result+"'>";
-document.getElementById("posts").prepend(post);
-};
-reader.readAsDataURL(foto);
-}else{
-post.innerHTML = html;
-document.getElement
+</body>
+</html>
