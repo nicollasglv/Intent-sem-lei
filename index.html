@@ -11,15 +11,8 @@ body{
   color:white;
   text-align:center;
 }
-
-#login{
-  margin-top:100px;
-}
-
-#site{
-  display:none;
-}
-
+#login{ margin-top:100px; }
+#site{ display:none; }
 #chat{
   width:80%;
   height:300px;
@@ -28,18 +21,16 @@ body{
   border:1px solid #444;
   padding:10px;
 }
-
-input{
+input, button{
   padding:5px;
   margin:5px;
 }
 button{
-  padding:6px 12px;
-  cursor:pointer;
   background:#ff2e2e;
+  color:white;
   border:none;
   border-radius:6px;
-  color:white;
+  cursor:pointer;
 }
 </style>
 
@@ -51,40 +42,40 @@ function entrar(){
   if(senha === senhaCorreta){
     document.getElementById("login").style.display="none";
     document.getElementById("site").style.display="block";
+    atualizar(); // já carrega o chat
   }else{
     alert("Senha incorreta");
   }
 }
 
 function enviar(){
-  let nome = document.getElementById("nome").value;
-  let msg = document.getElementById("msg").value;
+  let nome = document.getElementById("nome").value.trim();
+  let msg = document.getElementById("msg").value.trim();
 
-  if(nome=="" || msg==""){
-    alert("Coloque seu apelido e a mensagem");
-    return;
-  }
+  if(nome=="" || msg==""){ alert("Coloque apelido e mensagem"); return; }
 
   fetch("enviar.php",{
     method:"POST",
     headers:{"Content-Type":"application/x-www-form-urlencoded"},
     body:"nome="+encodeURIComponent(nome)+"&msg="+encodeURIComponent(msg)
+  }).then(()=>{ // só atualiza depois que PHP terminar
+    document.getElementById("msg").value="";
+    atualizar();
   });
-
-  document.getElementById("msg").value="";
 }
 
 function atualizar(){
-  fetch("chat.txt")
+  fetch("chat.txt?"+new Date().getTime()) // evita cache
   .then(r=>r.text())
   .then(t=>{
     document.getElementById("chat").innerHTML = t;
+    document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
   });
 }
 
-setInterval(atualizar,1000);
-</script>
+setInterval(()=>{ if(document.getElementById("site").style.display=="block") atualizar(); },1000);
 
+</script>
 </head>
 <body>
 
@@ -97,9 +88,7 @@ setInterval(atualizar,1000);
 
 <div id="site">
   <h1>Intent Sem Lei</h1>
-
   <div id="chat"></div>
-
   <input id="nome" placeholder="apelido">
   <input id="msg" placeholder="mensagem">
   <button onclick="enviar()">Enviar</button>
