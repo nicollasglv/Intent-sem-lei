@@ -2,11 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Intent Sem Lei</title>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<title>Chat dos Amigos</title>
 
 <style>
 body{
@@ -16,132 +12,56 @@ body{
   text-align:center;
 }
 
-#login{
-  margin-top:100px;
-}
-
-#site{
-  display:none;
-}
-
-.post{
-  background:#222;
-  padding:10px;
-  margin:10px;
-  border-radius:10px;
-  text-align:left;
-}
-
-img{
-  max-width:200px;
-  display:block;
-  margin:auto;
-}
-
-input, textarea{
+#chat{
   width:80%;
-  margin:5px;
-  padding:5px;
+  height:300px;
+  margin:auto;
+  overflow:auto;
+  border:1px solid #444;
+  padding:10px;
 }
 
-button{
-  padding:6px 12px;
-  cursor:pointer;
-  background:#ff2e2e;
-  border:none;
-  border-radius:6px;
-  color:white;
+input{
+  padding:5px;
+  margin:5px;
 }
 </style>
+
+<script>
+function enviar(){
+  let nome = document.getElementById("nome").value
+  let msg = document.getElementById("msg").value
+
+  fetch("enviar.php",{
+    method:"POST",
+    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:"nome="+nome+"&msg="+msg
+  })
+
+  document.getElementById("msg").value=""
+}
+
+function atualizar(){
+  fetch("chat.txt")
+  .then(r=>r.text())
+  .then(t=>{
+    document.getElementById("chat").innerHTML = t
+  })
+}
+
+setInterval(atualizar,1000)
+</script>
+
 </head>
 <body>
 
-<div id="login">
-  <h1>Intent Sem Lei</h1>
-  <p>Digite a senha</p>
-  <input id="senha" type="password"><br>
-  <button onclick="entrar()">Entrar</button>
-</div>
+<h1>Chat dos Amigos</h1>
 
-<div id="site">
-  <h2>Mural do grupo</h2>
-  <input id="apelido" placeholder="apelido"><br>
-  <p style="font-size:14px;color:#aaa;">Coloque um nome real para outros usuários se reconhecerem</p>
-  <textarea id="mensagem" placeholder="Escreve algo"></textarea><br>
-  <input type="file" id="foto"><br>
-  <button onclick="postar()">Postar</button>
-  <div id="posts"></div>
+<div id="chat"></div>
 
-  <h2>Chat do grupo</h2>
-  <input id="chatNome" placeholder="apelido">
-  <input id="chatMsg" placeholder="mensagem"><br>
-  <button onclick="enviarChat()">Enviar</button>
-  <div id="chatArea"></div>
-</div>
+<input id="nome" placeholder="apelido">
+<input id="msg" placeholder="mensagem">
+<button onclick="enviar()">Enviar</button>
 
-<script>
-// ------------------- CONFIGURAÇÃO DO FIREBASE -------------------
-const firebaseConfig = {
-  apiKey: "COLE_AQUI_SUA_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
-  projectId: "SEU_PROJETO",
-  storageBucket: "SEU_PROJETO.appspot.com",
-  messagingSenderId: "SEU_ID",
-  appId: "SEU_APP_ID"
-};
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-// ------------------- LOGIN -------------------
-const senhaCorreta = "1234";
-function entrar(){
-  let senha = document.getElementById("senha").value;
-  if(senha === senhaCorreta){
-    document.getElementById("login").style.display="none";
-    document.getElementById("site").style.display="block";
-  }else{
-    alert("Senha errada");
-  }
-}
-
-// ------------------- POSTAGEM -------------------
-function postar(){
-  let apelido = document.getElementById("apelido").value;
-  let mensagem = document.getElementById("mensagem").value;
-  let foto = document.getElementById("foto").files[0];
-
-  if(apelido == ""){
-    alert("Coloque um nome para outros usuários se reconhecerem");
-    return;
-  }
-
-  let postData = {
-    apelido: apelido,
-    mensagem: mensagem,
-    foto: null
-  };
-
-  if(foto){
-    let reader = new FileReader();
-    reader.onload = function(e){
-      postData.foto = e.target.result;
-      db.ref("posts").push(postData);
-    };
-    reader.readAsDataURL(foto);
-  } else {
-    db.ref("posts").push(postData);
-  }
-
-  document.getElementById("mensagem").value="";
-}
-
-// ------------------- CARREGAR POSTS EM TEMPO REAL -------------------
-db.ref("posts").on("child_added", function(snapshot){
-  let data = snapshot.val();
-  let post = document.createElement("div");
-  post.className = "post";
-  let html = "<b>"+data.apelido+"</b><br>"+data.mensagem+"<br>";
-  if(data.foto){
-    html += "<img src='"+data.foto+"'>";
-  }
+</body>
+</html>
